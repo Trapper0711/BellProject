@@ -1,0 +1,39 @@
+  private void wallinter()
+  {
+      for (int x = 1; x < size.x - 1; x++)
+      {
+          for (int y = 1; y < size.y - 1; y++)
+          {
+              if (wall[x, y])
+              {
+                  if (wall[x, y + 1] == false)
+                  {
+                      if (forc[x, y].y < 0)
+                      {
+                          abtragdat[x, y] = -forc[x, y].y;
+                          forc[x, y + 1] += new Vector2(forc[x, y].x, -forc[x, y].y);
+                          pressure[x, y + 1] += pressure[x, y];
+                      }
+                      else
+                      {
+                          forc[x, y + 1] += new Vector2(0, forc[x, y + 1].y * diffspeed);
+                      }
+                  }
+                  else if (wall[x + 1, y] == false && forc[x, y].x < 0)
+                  {
+                      abtragdat[x, y] = -forc[x, y].x;
+                      forc[x + 1, y] += new Vector2(-forc[x, y].x, forc[x, y].y);
+                      pressure[x + 1, y] += pressure[x, y];
+                  }
+                  else if (wall[x - 1, y] == false && forc[x, y].x > 0)
+                  {
+                      abtragdat[x, y] = -forc[x, y].x;
+                      forc[x - 1, y] += new Vector2(-forc[x, y].x, forc[x, y].y);
+                      pressure[x - 1, y] += pressure[x, y];
+                  }
+                  forc[x, y] = new Vector2();
+                  pressure[x, y] = 0;
+              }
+          }
+      }
+  }
