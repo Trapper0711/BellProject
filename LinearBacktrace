@@ -1,0 +1,121 @@
+private void moveVelo()
+  {
+      Vector2[,] mov = new Vector2[size.x, size.y];
+      for (int x = 1; x < size.x - 1; x++)
+      {
+          for (int y = 1; y < size.y - 1; y++)
+          {
+              Vector2 aim = new Vector2(x, y) - forc[x, y] * dt - externalforc * dt; ;
+              Vector2Int center = new Vector2Int((int)(aim.x - (aim.x % 1)), (int)(aim.y - (aim.y % 1)));
+
+
+              for (int i = -1; i < 2; i++)
+              {
+                  for (int j = -1; j < 2; j++)
+                  {
+                      if (center.x + i >= 0 && center.x + i < size.x && center.y + j >= 0 && center.y + j < size.y)
+                      {
+                          Vector2 zw = solvenl(center.x + i, center.y + j, aim, true);
+                          mov[x, y] += zw;
+                          mov[center.x + i, center.y + j] -= zw;
+                      }
+                  }
+              }
+          }
+      }
+
+      for (int x = 0; x < size.x; x++)
+      {
+          for (int y = 0; y < size.y; y++)
+          {
+              forc[x, y] += mov[x, y];
+          }
+      }
+
+      for (int x = 1; x < size.x - 1; x++)
+      {
+          forc[x, 1] += new Vector2(1 * forc[x, 0].x, -1 * forc[x, 0].y);
+          forc[x, size.y - 2] += new Vector2(1 * forc[x, size.y - 1].x, -1 * forc[x, size.y - 1].y);
+          forc[x, 0] = new Vector2();
+          forc[x, size.y - 1] = new Vector2();
+      }
+      for (int y = 1; y < size.y - 1; y++)
+      {
+          forc[1, y] += new Vector2(-1 * forc[0, y].x, 1 * forc[0, y].y);
+          forc[size.x - 2, y] += new Vector2(-1 * forc[size.x - 1, y].x, 1 * forc[size.x - 1, y].y);
+          forc[0, y] = new Vector2();
+          forc[size.x - 1, y] = new Vector2();
+      }
+
+
+  }
+
+  private void movepressure()
+  {
+      float[,] mov = new float[size.x, size.y];
+      for (int x = 1; x < size.x - 1; x++)
+      {
+          for (int y = 1; y < size.y - 1; y++)
+          {
+              Vector2 aim = new Vector2(x, y) - forc[x, y] * dt - externalforc * dt; ;
+              Vector2Int center = new Vector2Int((int)(aim.x - (aim.x % 1)), (int)(aim.y - (aim.y % 1)));
+
+
+              for (int i = -1; i < 2; i++)
+              {
+                  for (int j = -1; j < 2; j++)
+                  {
+                      if (center.x + i >= 0 && center.x + i < size.x && center.y + j >= 0 && center.y + j < size.y)
+                      {
+                          float zw = solvenl(center.x + i, center.y + j, aim, false)[0];
+                          mov[x, y] += zw;
+                          mov[center.x + i, center.y + j] -= zw;
+                      }
+                  }
+              }
+          }
+      }
+
+      for (int x = 0; x < size.x; x++)
+      {
+          for (int y = 0; y < size.y; y++)
+          {
+              pressure[x, y] += mov[x, y];
+          }
+      }
+      for (int x = 1; x < size.x - 1; x++)
+      {
+          pressure[x, 1] += pressure[x, 0];
+          pressure[x, size.y - 2] += pressure[x, size.y - 1];
+          pressure[x, 0] = 0;
+          pressure[x, size.y - 1] = 0;
+      }
+      for (int y = 1; y < size.y - 1; y++)
+      {
+          pressure[1, y] += pressure[0, y];
+          pressure[size.x - 2, y] += pressure[size.x - 1, y];
+          pressure[0, y] = 0;
+          pressure[size.x - 1, y] = 0;
+      }
+  }
+
+  private Vector2 solvenl(int x, int y, Vector2 pos, bool isVec2)
+  {
+      Vector2 ret;
+      if (Vector2.Distance(new Vector2(x, y), pos) < 1)
+      {
+          if (isVec2)
+          {
+              ret = forc[x, y] * (1 - Vector2.Distance(new Vector2(x, y), pos));
+          }
+          else
+          {
+              ret = new Vector2(pressure[x, y] * (1 - Vector2.Distance(new Vector2(x, y), pos)), 0);
+          }
+      }
+      else
+      {
+          ret = new Vector2();
+      }
+      return ret;
+  }
