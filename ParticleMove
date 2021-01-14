@@ -1,0 +1,42 @@
+    private void moveparticle(int x,int y)
+    {
+        if (hatt[x, y])
+        {
+            if (forc[x, y].x > 0.1)
+            {
+                if (forc[x, y].y > 0.1 && wall[x + 1, y + 1] == false && hatt[x + 1, y + 1] == false && Random.Range(0, 10) == 0)
+                {
+                    hatt[x + 1, y + 1] = true;
+                    hatt[x, y] = false;
+                }
+                else if (forc[x, y].y < 0.1 && wall[x + 1, y - 1] == false && hatt[x + 1, y - 1] == false && Random.Range(0, 10) == 0)
+                {
+                    hatt[x + 1, y - 1] = true;
+                    hatt[x, y] = false;
+                }
+                else if (wall[x + 1, y] == false && hatt[x + 1, y] == false && Random.Range(0, 10) == 0)
+                {
+                    hatt[x + 1, y] = true;
+                    hatt[x, y] = false;
+                }
+            }
+            else if (forc[x, y].x < 0.1)
+            {
+                if (forc[x, y].y > 0.1 && wall[x - 1, y + 1] == false && hatt[x - 1, y + 1] == false && Random.Range(0, 10) == 0)
+                {
+                    hatt[x - 1, y + 1] = true;
+                    hatt[x, y] = false;
+                }
+                else if (forc[x, y].y < 0.1 && wall[x - 1, y - 1] == false && hatt[x - 1, y - 1] == false && Random.Range(0, 10) == 0)
+                {
+                    hatt[x - 1, y - 1] = true;
+                    hatt[x, y] = false;
+                }
+                else if (wall[x - 1, y] == false && hatt[x - 1, y] == false && Random.Range(0, 10) == 0)
+                {
+                    hatt[x - 1, y] = true;
+                    hatt[x, y] = false;
+                }
+            }
+        }
+    }
