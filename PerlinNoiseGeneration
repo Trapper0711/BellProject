@@ -3,7 +3,7 @@
         float ran = Random.Range(-50f, 50f);
         for (int x = 1; x < size.x; x++)
         {
-            for (int y = 1; y < (int)(15 * Mathf.PerlinNoise(x * (1 / scale), ran)); y++)
+            for (int y = 1; y < (int)(50 * Mathf.PerlinNoise(x * (1 / scale), ran)); y++)
             {
                 wall[x, y] = true;
             }
