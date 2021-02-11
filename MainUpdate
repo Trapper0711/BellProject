@@ -1,61 +1,61 @@
-    private void Start()
-    {
-        abtragdat = new float[size.x, size.y];
-        pressure = new float[size.x, size.y];
-        forc = new Vector2[size.x, size.y];
-        wall = new bool[size.x, size.y];
-        hatt = new bool[size.x, size.y];
-        pressVelodiff = new Vector2[size.x, size.y];
+private void Start()
+{
+    abtragdat = new float[size.x, size.y];
+    pressure = new float[size.x, size.y];
+    forc = new Vector2[size.x, size.y];
+    wall = new bool[size.x, size.y];
+    hatt = new bool[size.x, size.y];
+    pressVelodiff = new Vector2[size.x, size.y];
 
-        for (int x = 0; x < size.x; x++)
-        {
-            for (int y = 0; y < size.y; y++)
-            {
-                pressure[x, y] = 0;
-                forc[x, y] = new Vector2();
-            }
-        }
-        PerlinNoiseGeneration();
-    }
-    
-        private void OnDrawGizmos()
+    for (int x = 0; x < size.x; x++)
     {
-        float rand = 0;
-        for (int x = 0; x < size.x; x++)
+        for (int y = 0; y < size.y; y++)
         {
-            for (int y = 0; y < size.y; y++)
+            pressure[x, y] = 0;
+            forc[x, y] = new Vector2();
+        }
+    }
+    PerlinNoiseGeneration();
+}
+
+    private void OnDrawGizmos()
+{
+    float rand = 0;
+    for (int x = 0; x < size.x; x++)
+    {
+        for (int y = 0; y < size.y; y++)
+        {
+            rand += pressure[x, y];
+            if (showpress)
             {
-                rand += pressure[x, y];
-                if (showpress)
+                Gizmos.color = Colormap.Evaluate((forc[x, y].magnitude) / scaleingfac);
+            }
+            else if (showabtrag == false)
+            {
+                Gizmos.color = Colormap.Evaluate((pressure[x, y]) / scaleingfac);
+            }
+            else
+            {
+                Gizmos.color = Colormap.Evaluate((abtragdat[x, y]) / scaleingfac);
+            }
+            Gizmos.DrawCube(new Vector3(x, y), new Vector3(1, 1, .1f));
+            if (forcpf)
+            {
+                Debug.DrawRay(new Vector3(x, y), forc[x, y], Color.green);
+            }
+            if (wall[x, y])
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawSphere(new Vector3(x, y), .3f);
+            }
+            if (deb)
+            {
+                if (hatt[x, y])
                 {
-                    Gizmos.color = Colormap.Evaluate((forc[x, y].magnitude) / scaleingfac);
-                }
-                else if (showabtrag == false)
-                {
-                    Gizmos.color = Colormap.Evaluate((pressure[x, y]) / scaleingfac);
-                }
-                else
-                {
-                    Gizmos.color = Colormap.Evaluate((abtragdat[x, y]) / scaleingfac);
-                }
-                Gizmos.DrawCube(new Vector3(x, y), new Vector3(1, 1, .1f));
-                if (forcpf)
-                {
-                    Debug.DrawRay(new Vector3(x, y), forc[x, y], Color.green);
-                }
-                if (wall[x, y])
-                {
-                    Gizmos.color = Color.cyan;
+                    Gizmos.color = Color.yellow;
                     Gizmos.DrawSphere(new Vector3(x, y), .3f);
                 }
-                if (deb)
-                {
-                    if (hatt[x, y])
-                    {
-                        Gizmos.color = Color.yellow;
-                        Gizmos.DrawSphere(new Vector3(x, y), .3f);
-                    }
-                }
             }
         }
     }
+}
